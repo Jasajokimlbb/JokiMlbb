@@ -3425,7 +3425,6 @@
             { name: "Top Up Diamond", pub: "Mobile Legends", img: "topupdiamond.png", type: "topup" }
         ];
 
-        // --- 2. PRODUCT OPTIONS (synced with admin panel via localStorage) ---
         const DEFAULT_PRODUCT_OPTIONS = {
             joki_ranked: [
                 { name: "Grandmaster", price: 17000 }, { name: "Epic", price: 17000 }, { name: "Legend", price: 17000 },
@@ -3501,19 +3500,12 @@
             },
         };
 
-        /**
-         * getProductOptions()
-         * Reads saved prices from localStorage (key: reyyz_prices, set by admin panel).
-         * Maps admin's flat structure back to the nested productOptions format.
-         * Falls back to DEFAULT_PRODUCT_OPTIONS if nothing saved yet.
-         */
         function getProductOptions() {
             try {
                 const saved = localStorage.getItem('reyyz_prices');
                 if (!saved) return DEFAULT_PRODUCT_OPTIONS;
                 const flat = JSON.parse(saved);
 
-                // Helper: find category items by prefix key
                 const get = (key) => flat[key] || null;
 
                 return {
@@ -3539,29 +3531,22 @@
             }
         }
 
-        // --- 3. PAYMENT ACCOUNT DATA ---
         const paymentAccounts = {
-            "QRIS": "088224946386 (REYYZ JOKI)",
-            "DANA": "088224946386 (REYYZ JOKI)",
-            "OVO": "08123456789 (REYYZ JOKI)",
-            "GOPAY": "08987654321 (REYYZ JOKI)",
-            "SHOPEEPAY": "08765432109 (REYYZ JOKI)",
-            "BCA": "1234567890 a.n REYYZ JOKI",
-            "SEABANK": "0987654321 a.n REYYZ JOKI"
+            "QRIS": "- A/n (Reyyz Joki, Swh Bsr)",
+            "DANA": "088224946386 A/n (Reynaldi Darmawan)",
+            "SHOPEEPAY": "085749672904 A/n (Reynaldi Darmawan)",
+            "BCA": "0830230211 A/n (Reynaldi Darmawan)",
+            "SEABANK": "901550934087 A/n (Reynaldi Darmawan)"
         };
 
-        // --- 4. PAYMENT DETAILS ---
         const paymentDetails = {
             "QRIS": { type: "instant", fee: 0, icon: "📷" },
-            "DANA": { type: "instant", fee: 500, icon: "🐙" },
-            "OVO": { type: "instant", fee: 1000, icon: "🔵" },
-            "GOPAY": { type: "instant", fee: 1000, icon: "🍃" },
-            "SHOPEEPAY": { type: "instant", fee: 1000, icon: "🛍" },
+            "DANA": { type: "instant", fee: 0, icon: "🐙" },
+            "SHOPEEPAY": { type: "instant", fee: 0, icon: "🛍" },
             "BCA": { type: "manual", fee: 0, icon: "🏦" },
             "SEABANK": { type: "manual", fee: 0, icon: "🏦" }
         };
 
-        // --- 5. GLOBAL STATE ---
         let state = {
             selectedGameType: null,
             basePrice: 0,
@@ -3574,7 +3559,6 @@
             selectedTotalPrice: 0
         };
 
-        // --- 6. DOM CACHING ---
         const views = {
             home: document.getElementById('home-view'),
             product: document.getElementById('product-detail'),
