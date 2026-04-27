@@ -1261,57 +1261,31 @@
         }
 
         /* --- CONTAINER UTAMA PEMBAYARAN --- */
+        /* ═══ PAYMENT GRID ═══ */
         #payment-parent-list {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 0.75rem;
+            gap: 0.65rem;
         }
-
-        #payment-parent-list .item-card {
-            display: flex !important;
-            flex-direction: column !important;
-            justify-content: center !important;
-            align-items: center !important;
-            text-align: center !important;
-            height: 90px;
-            padding: 0.75rem !important;
-            background: #0a0b10;
-            border: 1px solid var(--border);
+        .pay-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 0.4rem;
+            height: 80px;
+            background: var(--bg-secondary, #0e0f16);
+            border: 1.5px solid var(--border);
             cursor: pointer;
             transition: border-color 0.15s, background 0.15s;
+            border-radius: 4px;
+            user-select: none;
         }
-
-        #payment-parent-list .item-card:hover {
-            border-color: var(--primary);
-            background: rgba(0,243,255,0.04);
-        }
-
-        #payment-parent-list .item-card.selected {
-            border-color: var(--primary);
-            background: rgba(0,243,255,0.08);
-        }
-
-        #payment-parent-list .card-left {
-            display: flex !important;
-            flex-direction: column !important;
-            align-items: center !important;
-            justify-content: center !important;
-            gap: 0.4rem !important;
-            width: 100%;
-        }
-
-        #payment-parent-list .pay-icon {
-            font-size: 1.8rem;
-            line-height: 1;
-        }
-
-        #payment-parent-list .item-name {
-            font-size: 0.75rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            color: var(--text-main);
-        }
+        .pay-card:hover { border-color: var(--primary); background: rgba(0,243,255,0.05); }
+        .pay-card.selected { border-color: var(--primary); background: rgba(0,243,255,0.1); box-shadow: 0 0 10px rgba(0,243,255,0.15); }
+        .pay-card .pay-emoji { font-size: 1.7rem; line-height: 1; pointer-events: none; }
+        .pay-card .pay-name { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.5px; color: var(--text-main); text-transform: uppercase; pointer-events: none; }
+        .pay-card.selected .pay-name { color: var(--primary); }
 
         /* --- SUB-LIST (DETAIL) --- */
         .item-card.payment-card {
@@ -2695,44 +2669,28 @@
                     <div style="margin-bottom: 1.5rem;">
                         
                         <div id="payment-parent-list">
-                            <div class="item-card" onclick="showPaymentOptions('qris')">
-                                <div class="card-left">
-                                    <div class="pay-icon">📷</div>
-                                    <span class="item-name">QRIS</span>
-                                </div>
+                            <div class="pay-card" onclick="selectPaymentDirect(this,'QRIS')">
+                                <span class="pay-emoji">📷</span>
+                                <span class="pay-name">QRIS</span>
                             </div>
-                            <div class="item-card" onclick="selectPaymentDirect(this,'DANA')">
-                                <div class="card-left">
-                                    <div class="pay-icon">🐙</div>
-                                    <span class="item-name">DANA</span>
-                                </div>
+                            <div class="pay-card" onclick="selectPaymentDirect(this,'DANA')">
+                                <span class="pay-emoji">🐙</span>
+                                <span class="pay-name">DANA</span>
                             </div>
-                            <div class="item-card" onclick="selectPaymentDirect(this,'SHOPEEPAY')">
-                                <div class="card-left">
-                                    <div class="pay-icon">🛍️</div>
-                                    <span class="item-name">SHOPEEPAY</span>
-                                </div>
+                            <div class="pay-card" onclick="selectPaymentDirect(this,'SHOPEEPAY')">
+                                <span class="pay-emoji">🛍️</span>
+                                <span class="pay-name">SHOPEEPAY</span>
                             </div>
-                            <div class="item-card" onclick="selectPaymentDirect(this,'BCA')">
-                                <div class="card-left">
-                                    <div class="pay-icon">🏦</div>
-                                    <span class="item-name">BCA</span>
-                                </div>
+                            <div class="pay-card" onclick="selectPaymentDirect(this,'BCA')">
+                                <span class="pay-emoji">🏦</span>
+                                <span class="pay-name">BCA</span>
                             </div>
-                            <div class="item-card" onclick="selectPaymentDirect(this,'SEABANK')">
-                                <div class="card-left">
-                                    <div class="pay-icon">🌊</div>
-                                    <span class="item-name">SEABANK</span>
-                                </div>
+                            <div class="pay-card" onclick="selectPaymentDirect(this,'SEABANK')">
+                                <span class="pay-emoji">🌊</span>
+                                <span class="pay-name">SEABANK</span>
                             </div>
                         </div>
-
-                        <div id="payment-sub-list" class="hidden simple-container">
-                            <div class="flex items-center mb-2 cursor-pointer" onclick="resetPaymentView()">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"></path><path d="M12 19l-7-7 7-7"></path></svg>
-                                <span class="text-sm text-primary font-bold">Kembali</span>
-                            </div>
-                        </div>
+                        <div id="payment-sub-list" class="hidden"></div>
                     </div>
 
                     <!-- 4. KONFIRMASI -->
@@ -3192,6 +3150,26 @@
     </div>
 
     <script>
+        // ══════════════════════════════════════════════
+        //  CONFIG SYNC — Harga & rekening dari config.json
+        //  Export dari admin panel → upload GitHub → sinkron semua device
+        // ══════════════════════════════════════════════
+        (async function loadRemoteConfig() {
+            try {
+                const res = await fetch('./config.json?t=' + Date.now());
+                if (!res.ok) return;
+                const cfg = await res.json();
+                if (cfg.prices)          localStorage.setItem('reyyz_prices', JSON.stringify(cfg.prices));
+                if (cfg.paymentAccounts) Object.assign(paymentAccounts, cfg.paymentAccounts);
+                if (cfg.adminWa || cfg.storeName) {
+                    const ex = JSON.parse(localStorage.getItem('reyyz_config') || '{}');
+                    if (cfg.adminWa)    ex.adminWa    = cfg.adminWa;
+                    if (cfg.storeName)  ex.storeName  = cfg.storeName;
+                    localStorage.setItem('reyyz_config', JSON.stringify(ex));
+                }
+            } catch(e) { /* config.json belum ada — pakai default */ }
+        })();
+
         // --- 0. DB CONFIGURATION (FIXED: Defined at top) ---
         const DB_KEY = 'reyyz_transactions'; // Harus sama dengan TX_KEY di admin.html
 
@@ -3462,6 +3440,7 @@
             return t(key);
         }
 
+        // --- 2. DATA PRODUK ---
         const games = [
             { name: "Joki Ranked", pub: "Mobile Legends", img: "jokiranked.png", type: "joki_ranked" },
             { name: "Joki Rank Paketan", pub: "Mobile Legends", img: "jokirankpaket.png", type: "joki_rank_paketan" },
@@ -4881,16 +4860,13 @@
         const heroEl = document.querySelector('.hero-banner-content');
         if (heroEl) heroObserver.observe(heroEl);
 
-        // Pilih pembayaran langsung (DANA, BCA, SHOPEEPAY, SEABANK) tanpa submenu
         function selectPaymentDirect(el, method) {
-            // Hapus selected dari semua card
-            document.querySelectorAll('#payment-parent-list .payment-card').forEach(c => c.classList.remove('selected'));
+            document.querySelectorAll('#payment-parent-list .pay-card').forEach(c => c.classList.remove('selected'));
             el.classList.add('selected');
             state.selectedPaymentMethod = method;
             state.selectedPaymentCategory = method;
             updateBuyButton();
             updateConfirmationSummary();
-            showToast(`${method} dipilih`, 'success');
         }
 
         function showToast(msg, type) {
@@ -5341,5 +5317,55 @@
             }, 5000);
         });
 
-    </script>ss
+        // ══════════════════════════════════════════════
+        //  FIX: NAVIGATION FUNCTIONS (CTA BUTTONS)
+        // ══════════════════════════════════════════════
+        function scrollToGrid() {
+            if (views.home.classList.contains('hidden-section')) {
+                goBackToHome();
+                setTimeout(() => {
+                    const grid = document.getElementById('popular-grid');
+                    if (grid) grid.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }, 350);
+            } else {
+                const grid = document.getElementById('popular-grid');
+                if (grid) grid.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+
+        function openTopUpDiamond() {
+            const doOpen = () => {
+                // Cari game dengan type 'topup'
+                const topupGame = games.find(g => g.type === 'topup');
+                if (topupGame) {
+                    selectGame(topupGame.name);
+                } else {
+                    scrollToGrid();
+                }
+            };
+            if (views.home.classList.contains('hidden-section')) {
+                goBackToHome();
+                setTimeout(doOpen, 400);
+            } else {
+                doOpen();
+            }
+        }
+
+        function scrollToTestimoni() {
+            const doScroll = () => {
+                const el = document.querySelector('.testi-section');
+                if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            };
+            if (views.home.classList.contains('hidden-section')) {
+                goBackToHome();
+                setTimeout(doScroll, 350);
+            } else {
+                doScroll();
+            }
+        }
+
+        // ══════════════════════════════════════════════
+        //  FIX: LOYALTY & TRACK VIEWS INIT
+        // ══════════════════════════════════════════════
+    </script>
 </html>
