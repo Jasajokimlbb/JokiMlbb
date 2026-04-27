@@ -1,0 +1,16 @@
+{
+  "name": "REYYZ JOKI",
+  "short_name": "ReyyzJoki",
+  "description": "Top Up Diamond & Jasa Joki Mobile Legends Terpercaya",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#050508",
+  "theme_color": "#00F3FF",
+  "orientation": "portrait-primary",
+  "icons": [
+    { "src": "./logo.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "./logo.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ],
+  "categories": ["games", "shopping"],
+  "lang": "id"
+}
