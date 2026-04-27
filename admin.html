@@ -1,1 +1,1158 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>REYYZ JOKI — Admin Panel</title>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #050508;
+  --bg2: #0c0c14;
+  --bg3: #12121e;
+  --border: rgba(255,255,255,0.07);
+  --border2: rgba(255,255,255,0.12);
+  --cyan: #00F3FF;
+  --pink: #FF005C;
+  --gold: #FFD700;
+  --green: #00E676;
+  --orange: #FF6D00;
+  --text: #f0f0f8;
+  --muted: #6b6b8a;
+  --font-head: 'Chakra Petch', monospace;
+  --font-mono: 'JetBrains Mono', monospace;
+}
 
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; }
+body {
+  font-family: var(--font-mono);
+  background: var(--bg);
+  color: var(--text);
+  font-size: 13px;
+  overflow: hidden;
+}
+
+/* ─── LOGIN SCREEN ─── */
+#login-screen {
+  position: fixed; inset: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--bg);
+}
+.login-screen-bg {
+  position: absolute; inset: 0; overflow: hidden; pointer-events: none;
+}
+.grid-line {
+  position: absolute; background: rgba(0,243,255,0.03);
+}
+.grid-line.h { height: 1px; width: 100%; }
+.grid-line.v { width: 1px; height: 100%; }
+.login-box {
+  position: relative; z-index: 1;
+  width: 360px;
+  border: 1px solid rgba(0,243,255,0.25);
+  background: var(--bg2);
+  padding: 2.5rem;
+  box-shadow: 0 0 60px rgba(0,243,255,0.08), 0 0 120px rgba(255,0,92,0.04);
+}
+.login-logo {
+  font-family: var(--font-head);
+  font-size: 1.4rem;
+  font-weight: 800;
+  text-align: center;
+  margin-bottom: 0.25rem;
+  letter-spacing: 2px;
+}
+.login-logo span { color: var(--cyan); }
+.login-subtitle {
+  text-align: center; color: var(--muted); font-size: 11px;
+  letter-spacing: 2px; text-transform: uppercase; margin-bottom: 2rem;
+}
+.login-field { margin-bottom: 1rem; }
+.login-field label { display: block; font-size: 10px; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 6px; }
+.login-field input {
+  width: 100%; background: var(--bg3); border: 1px solid var(--border2);
+  color: var(--text); font-family: var(--font-mono); font-size: 13px;
+  padding: 0.65rem 0.85rem; outline: none; transition: border-color 0.2s;
+}
+.login-field input:focus { border-color: var(--cyan); box-shadow: 0 0 12px rgba(0,243,255,0.1); }
+.login-error { color: var(--pink); font-size: 11px; margin-bottom: 0.75rem; display: none; }
+.btn-login-admin {
+  width: 100%; background: var(--cyan); color: #000;
+  font-family: var(--font-head); font-weight: 700; font-size: 13px;
+  letter-spacing: 2px; padding: 0.75rem; cursor: pointer;
+  border: none; transition: opacity 0.2s, box-shadow 0.2s;
+  text-transform: uppercase;
+}
+.btn-login-admin:hover { opacity: 0.9; box-shadow: 0 0 24px rgba(0,243,255,0.35); }
+.login-hint { margin-top: 1rem; text-align: center; color: var(--muted); font-size: 10px; }
+
+/* ─── APP LAYOUT ─── */
+#app { display: none; height: 100vh; flex-direction: row; }
+#app.visible { display: flex; }
+
+/* ─── SIDEBAR ─── */
+.sidebar {
+  width: 220px; flex-shrink: 0;
+  background: var(--bg2);
+  border-right: 1px solid var(--border);
+  display: flex; flex-direction: column;
+  overflow: hidden;
+}
+.sidebar-logo {
+  padding: 1.25rem 1.25rem 1rem;
+  border-bottom: 1px solid var(--border);
+}
+.sidebar-logo .brand {
+  font-family: var(--font-head); font-size: 1rem; font-weight: 800;
+  letter-spacing: 1px; color: var(--cyan);
+}
+.sidebar-logo .sub { font-size: 10px; color: var(--muted); letter-spacing: 1px; margin-top: 2px; }
+
+.nav-section { padding: 0.75rem 0; border-bottom: 1px solid var(--border); }
+.nav-label { font-size: 9px; color: var(--muted); letter-spacing: 2px; text-transform: uppercase; padding: 0 1rem 0.4rem; }
+.nav-item {
+  display: flex; align-items: center; gap: 0.65rem;
+  padding: 0.55rem 1rem; cursor: pointer; color: var(--muted);
+  transition: all 0.15s; font-size: 12px; position: relative;
+}
+.nav-item:hover { color: var(--text); background: rgba(255,255,255,0.03); }
+.nav-item.active {
+  color: var(--cyan); background: rgba(0,243,255,0.06);
+}
+.nav-item.active::before {
+  content: ''; position: absolute; left: 0; top: 0; bottom: 0;
+  width: 2px; background: var(--cyan);
+}
+.nav-item svg { flex-shrink: 0; }
+.nav-badge {
+  margin-left: auto; background: var(--pink); color: #fff;
+  font-size: 9px; font-weight: 700; padding: 1px 6px;
+  border-radius: 20px; min-width: 18px; text-align: center;
+}
+
+.sidebar-footer {
+  margin-top: auto; padding: 1rem; border-top: 1px solid var(--border);
+}
+.admin-pill {
+  display: flex; align-items: center; gap: 0.5rem;
+  font-size: 11px; color: var(--muted);
+}
+.admin-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--green); box-shadow: 0 0 6px var(--green); }
+.btn-logout-admin {
+  margin-top: 0.6rem; width: 100%; background: transparent;
+  border: 1px solid var(--border2); color: var(--muted); font-family: var(--font-mono);
+  font-size: 11px; padding: 0.4rem; cursor: pointer; transition: all 0.2s;
+  letter-spacing: 1px;
+}
+.btn-logout-admin:hover { border-color: var(--pink); color: var(--pink); }
+
+/* ─── MAIN CONTENT ─── */
+.main {
+  flex: 1; display: flex; flex-direction: column; overflow: hidden;
+}
+.topbar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0.85rem 1.5rem;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg2); flex-shrink: 0;
+}
+.topbar-title {
+  font-family: var(--font-head); font-size: 1rem; font-weight: 700;
+  letter-spacing: 1px;
+}
+.topbar-right { display: flex; align-items: center; gap: 1rem; }
+.live-badge {
+  display: flex; align-items: center; gap: 5px;
+  font-size: 10px; color: var(--green); letter-spacing: 1px;
+}
+.live-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); animation: pulse 1.5s infinite; }
+@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(1.3)} }
+.last-refresh { font-size: 10px; color: var(--muted); }
+
+.content { flex: 1; overflow-y: auto; padding: 1.25rem 1.5rem; }
+
+.page { display: none; }
+.page.active { display: block; }
+
+.stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.85rem; margin-bottom: 1.25rem; }
+.stat-card {
+  background: var(--bg2); border: 1px solid var(--border);
+  padding: 1.1rem 1.25rem; position: relative; overflow: hidden;
+  transition: border-color 0.2s;
+}
+.stat-card:hover { border-color: var(--border2); }
+.stat-card::after {
+  content: ''; position: absolute; bottom: 0; left: 0; right: 0;
+  height: 2px;
+}
+.stat-card.cyan::after { background: var(--cyan); }
+.stat-card.pink::after { background: var(--pink); }
+.stat-card.gold::after { background: var(--gold); }
+.stat-card.green::after { background: var(--green); }
+.stat-label { font-size: 9px; color: var(--muted); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 0.5rem; }
+.stat-value { font-family: var(--font-head); font-size: 1.8rem; font-weight: 800; line-height: 1; }
+.stat-card.cyan .stat-value { color: var(--cyan); }
+.stat-card.pink .stat-value { color: var(--pink); }
+.stat-card.gold .stat-value { color: var(--gold); }
+.stat-card.green .stat-value { color: var(--green); }
+.stat-sub { font-size: 10px; color: var(--muted); margin-top: 0.35rem; }
+
+.sec-head {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 0.85rem;
+}
+.sec-title {
+  font-family: var(--font-head); font-size: 0.8rem; font-weight: 700;
+  letter-spacing: 2px; text-transform: uppercase; color: var(--muted);
+}
+
+.table-wrap { background: var(--bg2); border: 1px solid var(--border); overflow: hidden; }
+.table-search {
+  padding: 0.75rem 1rem; border-bottom: 1px solid var(--border);
+  display: flex; gap: 0.5rem;
+}
+.table-search input {
+  flex: 1; background: var(--bg3); border: 1px solid var(--border);
+  color: var(--text); font-family: var(--font-mono); font-size: 12px;
+  padding: 0.4rem 0.75rem; outline: none;
+}
+.table-search input:focus { border-color: var(--cyan); }
+.filter-btn {
+  background: var(--bg3); border: 1px solid var(--border);
+  color: var(--muted); font-family: var(--font-mono); font-size: 11px;
+  padding: 0.4rem 0.75rem; cursor: pointer; transition: all 0.15s;
+}
+.filter-btn:hover, .filter-btn.active { border-color: var(--cyan); color: var(--cyan); }
+table { width: 100%; border-collapse: collapse; }
+th {
+  padding: 0.55rem 0.85rem; text-align: left;
+  font-size: 9px; color: var(--muted); letter-spacing: 2px; text-transform: uppercase;
+  border-bottom: 1px solid var(--border); white-space: nowrap;
+  background: var(--bg3);
+}
+td {
+  padding: 0.65rem 0.85rem; border-bottom: 1px solid var(--border);
+  font-size: 12px; vertical-align: middle;
+}
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: rgba(255,255,255,0.015); }
+.mono { font-family: var(--font-mono); font-size: 11px; }
+
+.badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-size: 10px; font-weight: 600; padding: 3px 10px;
+  border-radius: 0; letter-spacing: 0.5px; text-transform: uppercase; white-space: nowrap;
+}
+.badge-unpaid { background: rgba(255,0,92,0.15); color: var(--pink); border: 1px solid rgba(255,0,92,0.3); }
+.badge-paid { background: rgba(255,215,0,0.15); color: var(--gold); border: 1px solid rgba(255,215,0,0.3); }
+.badge-processing { background: rgba(0,243,255,0.1); color: var(--cyan); border: 1px solid rgba(0,243,255,0.25); }
+.badge-completed { background: rgba(0,230,118,0.1); color: var(--green); border: 1px solid rgba(0,230,118,0.25); }
+
+.action-group { display: flex; gap: 4px; flex-wrap: wrap; }
+.btn-action {
+  font-size: 10px; padding: 3px 10px; cursor: pointer; border: 1px solid var(--border2);
+  background: transparent; color: var(--muted); font-family: var(--font-mono);
+  transition: all 0.15s; white-space: nowrap;
+}
+.btn-action:hover { color: var(--text); border-color: var(--text); }
+.btn-action.paid { border-color: rgba(255,215,0,0.4); color: var(--gold); }
+.btn-action.paid:hover { background: rgba(255,215,0,0.1); }
+.btn-action.processing { border-color: rgba(0,243,255,0.4); color: var(--cyan); }
+.btn-action.processing:hover { background: rgba(0,243,255,0.07); }
+.btn-action.success { border-color: rgba(0,230,118,0.4); color: var(--green); }
+.btn-action.success:hover { background: rgba(0,230,118,0.07); }
+.btn-action.danger { border-color: rgba(255,0,92,0.4); color: var(--pink); }
+.btn-action.danger:hover { background: rgba(255,0,92,0.07); }
+
+.empty-state {
+  text-align: center; padding: 3rem 1rem; color: var(--muted);
+}
+.empty-state svg { opacity: 0.3; margin: 0 auto 0.75rem; }
+
+.price-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.85rem; }
+.price-card {
+  background: var(--bg2); border: 1px solid var(--border); padding: 1.25rem;
+}
+.price-card-head {
+  display: flex; justify-content: space-between; align-items: flex-start;
+  margin-bottom: 1rem;
+}
+.price-card-title { font-family: var(--font-head); font-size: 0.85rem; font-weight: 700; color: var(--cyan); }
+.price-card-type { font-size: 10px; color: var(--muted); letter-spacing: 1px; margin-top: 2px; }
+.price-item-row {
+  display: flex; align-items: center; gap: 0.5rem;
+  padding: 0.5rem 0; border-bottom: 1px solid var(--border);
+}
+.price-item-row:last-child { border-bottom: none; }
+.price-item-name { flex: 1; font-size: 12px; }
+.price-input {
+  width: 110px; background: var(--bg3); border: 1px solid var(--border);
+  color: var(--cyan); font-family: var(--font-mono); font-size: 12px;
+  padding: 4px 8px; outline: none; text-align: right;
+}
+.price-input:focus { border-color: var(--cyan); box-shadow: 0 0 8px rgba(0,243,255,0.12); }
+.btn-save-price {
+  background: var(--cyan); color: #000; font-family: var(--font-head);
+  font-size: 11px; font-weight: 700; padding: 5px 14px; cursor: pointer;
+  border: none; transition: opacity 0.2s; letter-spacing: 1px;
+}
+.btn-save-price:hover { opacity: 0.85; }
+
+.user-tag { font-size: 10px; padding: 2px 8px; border: 1px solid var(--border2); color: var(--muted); }
+.user-tag.active { border-color: rgba(0,230,118,0.4); color: var(--green); }
+
+#admin-toast {
+  position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 999;
+  display: flex; flex-direction: column; gap: 0.5rem;
+}
+.a-toast {
+  background: var(--bg3); border: 1px solid var(--border2);
+  padding: 0.65rem 1rem; font-size: 12px; display: flex; gap: 0.5rem;
+  align-items: center; box-shadow: 0 4px 24px rgba(0,0,0,0.5);
+  animation: slideIn 0.2s ease; min-width: 220px;
+}
+.a-toast.ok { border-left: 3px solid var(--green); }
+.a-toast.err { border-left: 3px solid var(--pink); }
+.a-toast.info { border-left: 3px solid var(--cyan); }
+@keyframes slideIn { from{opacity:0;transform:translateX(20px)} to{opacity:1;transform:translateX(0)} }
+
+/* ─── MODAL ─── */
+.modal-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.75); z-index: 90;
+  display: flex; align-items: center; justify-content: center; display: none;
+}
+.modal-overlay.open { display: flex; }
+.modal-box {
+  background: var(--bg2); border: 1px solid var(--border2);
+  width: 480px; max-width: 95vw; padding: 1.75rem;
+  box-shadow: 0 0 60px rgba(0,0,0,0.7);
+}
+.modal-title {
+  font-family: var(--font-head); font-size: 1rem; font-weight: 700;
+  margin-bottom: 0.25rem; letter-spacing: 1px;
+}
+.modal-sub { font-size: 11px; color: var(--muted); margin-bottom: 1.25rem; }
+.modal-field { margin-bottom: 1rem; }
+.modal-field label { display: block; font-size: 10px; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 6px; }
+.modal-field input, .modal-field select, .modal-field textarea {
+  width: 100%; background: var(--bg3); border: 1px solid var(--border2);
+  color: var(--text); font-family: var(--font-mono); font-size: 12px;
+  padding: 0.5rem 0.75rem; outline: none;
+}
+.modal-field input:focus, .modal-field select:focus { border-color: var(--cyan); }
+.modal-field select option { background: var(--bg3); }
+.modal-footer-btns { display: flex; gap: 0.5rem; justify-content: flex-end; margin-top: 1.25rem; }
+.btn-modal-cancel {
+  background: transparent; border: 1px solid var(--border2); color: var(--muted);
+  font-family: var(--font-mono); font-size: 12px; padding: 0.5rem 1.25rem;
+  cursor: pointer; transition: all 0.15s;
+}
+.btn-modal-cancel:hover { border-color: var(--text); color: var(--text); }
+.btn-modal-ok {
+  background: var(--cyan); color: #000; font-family: var(--font-head);
+  font-size: 12px; font-weight: 700; padding: 0.5rem 1.25rem;
+  cursor: pointer; border: none; letter-spacing: 1px;
+}
+.btn-modal-ok:hover { opacity: 0.9; }
+.detail-row { display: flex; gap: 0.5rem; margin-bottom: 0.5rem; font-size: 12px; }
+.detail-key { color: var(--muted); width: 140px; flex-shrink: 0; }
+.detail-val { color: var(--text); word-break: break-all; }
+
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 2px; }
+
+.dash-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.85rem; margin-bottom: 0.85rem; }
+.recent-orders-wrap { grid-column: 1 / -1; }
+
+@media(max-width: 900px) {
+  .stats-row { grid-template-columns: repeat(2,1fr); }
+  .dash-grid { grid-template-columns: 1fr; }
+  .price-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<div id="login-screen">
+  <div class="login-screen-bg" id="grid-bg"></div>
+  <div class="login-box">
+    <div class="login-logo">REYYZ <span>JOKI</span></div>
+    <div class="login-subtitle">Admin Control Panel</div>
+    <div class="login-field">
+      <label>Username</label>
+      <input type="text" id="adm-user" placeholder="admin" autocomplete="off">
+    </div>
+    <div class="login-field">
+      <label>Password</label>
+      <input type="password" id="adm-pass" placeholder="••••••••" onkeydown="if(event.key==='Enter') doAdminLogin()">
+    </div>
+    <div class="login-error" id="login-err">⚠ Username atau password salah</div>
+    <button class="btn-login-admin" onclick="doAdminLogin()">MASUK PANEL</button>
+    <div class="login-hint">Default: admin / reyyzjoki2026</div>
+  </div>
+</div>
+
+<div id="app">
+
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="brand">REYYZ JOKI</div>
+      <div class="sub">ADMIN PANEL v2.0</div>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-label">Main</div>
+      <div class="nav-item active" onclick="showPage('dashboard', this)">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+        Dashboard
+      </div>
+      <div class="nav-item" onclick="showPage('orders', this)">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        Transaksi
+        <span class="nav-badge" id="badge-orders">0</span>
+      </div>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-label">Manajemen</div>
+      <div class="nav-item" onclick="showPage('users', this)">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        Pengguna
+      </div>
+      <div class="nav-item" onclick="showPage('prices', this)">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        Kelola Harga
+      </div>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-label">Sistem</div>
+      <div class="nav-item" onclick="showPage('settings', this)">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93l-1.41 1.41M4.93 4.93l1.41 1.41M4.93 19.07l1.41-1.41M19.07 19.07l-1.41-1.41M12 2v2M12 20v2M2 12h2M20 12h2"/></svg>
+        Pengaturan
+      </div>
+    </div>
+
+    <div class="sidebar-footer">
+      <div class="admin-pill">
+        <div class="admin-dot"></div>
+        <span id="admin-name-pill">admin</span>
+      </div>
+      <button class="btn-logout-admin" onclick="doAdminLogout()">LOGOUT</button>
+    </div>
+  </aside>
+
+  <div class="main">
+    <div class="topbar">
+      <div class="topbar-title" id="page-title">Dashboard</div>
+      <div class="topbar-right">
+        <div class="live-badge"><div class="live-dot"></div> LIVE</div>
+        <div class="last-refresh" id="last-refresh">Refresh: —</div>
+        <button class="filter-btn" onclick="loadAllData()">⟳ Refresh</button>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <div class="page active" id="page-dashboard">
+        <div class="stats-row">
+          <div class="stat-card cyan">
+            <div class="stat-label">Total Order</div>
+            <div class="stat-value" id="stat-total">0</div>
+            <div class="stat-sub">Semua transaksi masuk</div>
+          </div>
+          <div class="stat-card pink">
+            <div class="stat-label">Belum Bayar</div>
+            <div class="stat-value" id="stat-unpaid">0</div>
+            <div class="stat-sub">Menunggu konfirmasi</div>
+          </div>
+          <div class="stat-card gold">
+            <div class="stat-label">Total Revenue</div>
+            <div class="stat-value" id="stat-revenue">0</div>
+            <div class="stat-sub">Dari transaksi completed</div>
+          </div>
+          <div class="stat-card green">
+            <div class="stat-label">Member</div>
+            <div class="stat-value" id="stat-users">0</div>
+            <div class="stat-sub">Akun terdaftar</div>
+          </div>
+        </div>
+
+        <div class="sec-head">
+          <div class="sec-title">Transaksi Terbaru</div>
+          <button class="filter-btn" onclick="showPage('orders', document.querySelector('.nav-item:nth-child(2)'))">Lihat Semua →</button>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Invoice</th><th>Game / Layanan</th><th>Item</th>
+                <th>Total</th><th>Status</th><th>Waktu</th><th>Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="dash-recent-tbody">
+              <tr><td colspan="7"><div class="empty-state">Loading...</div></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="page" id="page-orders">
+        <div class="table-wrap">
+          <div class="table-search">
+            <input type="text" id="order-search" placeholder="Cari invoice, game, item..." oninput="filterOrders()">
+            <button class="filter-btn" id="f-all" onclick="setFilter('all')">Semua</button>
+            <button class="filter-btn" id="f-unpaid" onclick="setFilter('UNPAID')">Belum Bayar</button>
+            <button class="filter-btn" id="f-paid" onclick="setFilter('PAID')">Sudah Bayar</button>
+            <button class="filter-btn" id="f-processing" onclick="setFilter('PROCESSING')">Proses</button>
+            <button class="filter-btn" id="f-completed" onclick="setFilter('COMPLETED')">Sukses</button>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>Invoice</th><th>Game</th><th>Item</th><th>Pembayaran</th>
+                <th>Total</th><th>WA Kontak</th><th>Status</th><th>Waktu</th><th>Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="orders-tbody">
+              <tr><td colspan="9"><div class="empty-state">Loading...</div></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="page" id="page-users">
+        <div class="stats-row" style="grid-template-columns:repeat(3,1fr);">
+          <div class="stat-card cyan">
+            <div class="stat-label">Total Registrasi</div>
+            <div class="stat-value" id="u-stat-total">0</div>
+            <div class="stat-sub">Semua akun terdaftar</div>
+          </div>
+          <div class="stat-card green">
+            <div class="stat-label">Session Aktif</div>
+            <div class="stat-value" id="u-stat-active">0</div>
+            <div class="stat-sub">Pengguna sedang login</div>
+          </div>
+          <div class="stat-card gold">
+            <div class="stat-label">Tanpa Transaksi</div>
+            <div class="stat-value" id="u-stat-noorder">0</div>
+            <div class="stat-sub">Belum pernah order</div>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <div class="table-search">
+            <input type="text" id="user-search" placeholder="Cari nama, username, email..." oninput="renderUsersTable()">
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>#</th><th>Nama Lengkap</th><th>Username</th><th>Email</th>
+                <th>WhatsApp</th><th>Total Order</th><th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="users-tbody">
+              <tr><td colspan="7"><div class="empty-state">Loading...</div></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="page" id="page-prices">
+        <div class="sec-head" style="margin-bottom:1rem;">
+          <div class="sec-title">Kelola Harga Layanan</div>
+          <div style="font-size:11px;color:var(--muted);">Harga yang kamu ubah akan langsung berlaku di website utama</div>
+        </div>
+        <div class="price-grid" id="price-grid-container">
+          <div style="color:var(--muted);font-size:12px;">Loading...</div>
+        </div>
+      </div>
+
+      <div class="page" id="page-settings">
+        <div class="sec-head"><div class="sec-title">Pengaturan Admin</div></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.85rem;max-width:700px;">
+          <div class="table-wrap" style="padding:1.25rem;">
+            <div style="font-family:var(--font-head);font-size:0.85rem;margin-bottom:1rem;color:var(--cyan);">Ganti Password Admin</div>
+            <div class="modal-field">
+              <label>Password Lama</label>
+              <input type="password" id="old-pass" placeholder="Password lama">
+            </div>
+            <div class="modal-field">
+              <label>Password Baru</label>
+              <input type="password" id="new-pass" placeholder="Password baru">
+            </div>
+            <div class="modal-field">
+              <label>Konfirmasi</label>
+              <input type="password" id="confirm-pass" placeholder="Ulangi password baru">
+            </div>
+            <button class="btn-save-price" onclick="changeAdminPass()">SIMPAN</button>
+          </div>
+          <div class="table-wrap" style="padding:1.25rem;">
+            <div style="font-family:var(--font-head);font-size:0.85rem;margin-bottom:1rem;color:var(--cyan);">Info Kontak Admin</div>
+            <div class="modal-field">
+              <label>Nomor WhatsApp Admin</label>
+              <input type="text" id="admin-wa" placeholder="628xxxxxxxxxx">
+            </div>
+            <div class="modal-field">
+              <label>Nama Toko</label>
+              <input type="text" id="admin-storename" placeholder="REYYZ JOKI">
+            </div>
+            <button class="btn-save-price" onclick="saveAdminSettings()">SIMPAN</button>
+          </div>
+
+          <div class="table-wrap" style="padding:1.25rem; grid-column: 1 / -1;">
+            <div style="font-family:var(--font-head);font-size:0.85rem;margin-bottom:1rem;color:var(--pink);">Zona Berbahaya</div>
+            <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
+              <button class="btn-action danger" onclick="clearTransactions()">🗑 Hapus Semua Transaksi</button>
+              <button class="btn-action danger" onclick="clearUsers()">🗑 Hapus Semua Pengguna</button>
+              <button class="btn-action danger" onclick="resetPrices()">↺ Reset Harga ke Default</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-detail">
+  <div class="modal-box">
+    <div class="modal-title">Detail Transaksi</div>
+    <div class="modal-sub" id="modal-detail-invoice">—</div>
+    <div id="modal-detail-body"></div>
+    <div class="modal-field" style="margin-top:1rem;">
+      <label>Ubah Status</label>
+      <select id="modal-status-select">
+        <option value="UNPAID">UNPAID — Belum Bayar</option>
+        <option value="PAID">PAID — Sudah Bayar</option>
+        <option value="PROCESSING">PROCESSING — Sedang Diproses</option>
+        <option value="COMPLETED">COMPLETED — Selesai</option>
+      </select>
+    </div>
+    <div class="modal-footer-btns">
+      <button class="btn-modal-cancel" onclick="closeModal('modal-detail')">Tutup</button>
+      <button class="btn-modal-ok" onclick="saveStatusChange()">SIMPAN STATUS</button>
+    </div>
+  </div>
+</div>
+
+<div id="admin-toast"></div>
+<script>
+const TX_KEY   = 'reyyz_transactions';
+const USER_KEY = 'reyyz_users';
+const SESS_KEY = 'reyyz_session';
+const PRICE_KEY= 'reyyz_prices';
+const ADM_KEY  = 'reyyz_admin';
+const CFG_KEY  = 'reyyz_config';
+
+function getAdminCreds() {
+  const stored = localStorage.getItem(ADM_KEY);
+  if (stored) return JSON.parse(stored);
+  return { username: 'admin', password: 'Jonasan05' };
+}
+
+function doAdminLogin() {
+  const u = document.getElementById('adm-user').value.trim();
+  const p = document.getElementById('adm-pass').value;
+  const creds = getAdminCreds();
+  const errEl = document.getElementById('login-err');
+
+  if (u === creds.username && p === creds.password) {
+    errEl.style.display = 'none';
+    sessionStorage.setItem('adm_auth', '1');
+    document.getElementById('admin-name-pill').textContent = u;
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('app').classList.add('visible');
+    loadAllData();
+    startAutoRefresh();
+  } else {
+    errEl.style.display = 'block';
+  }
+}
+
+function doAdminLogout() {
+  sessionStorage.removeItem('adm_auth');
+  location.reload();
+}
+
+// Auto login if session exists
+if (sessionStorage.getItem('adm_auth') === '1') {
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('app').classList.add('visible');
+  loadAllData();
+  startAutoRefresh();
+}
+
+const pageTitles = {
+  dashboard: 'Dashboard',
+  orders: 'Manajemen Transaksi',
+  users: 'Pengguna Terdaftar',
+  prices: 'Kelola Harga',
+  settings: 'Pengaturan'
+};
+
+function showPage(name, navEl) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('page-' + name).classList.add('active');
+  if (navEl) navEl.classList.add('active');
+  document.getElementById('page-title').textContent = pageTitles[name] || name;
+
+  if (name === 'orders') renderOrdersTable();
+  if (name === 'users') renderUsersTable();
+  if (name === 'prices') renderPrices();
+  if (name === 'settings') loadSettings();
+}
+
+function getTx()    { try { return JSON.parse(localStorage.getItem(TX_KEY) || '[]'); } catch{return[];} }
+function getUsers() { try { return JSON.parse(localStorage.getItem(USER_KEY) || '[]'); } catch{return[];} }
+function saveTx(arr){ localStorage.setItem(TX_KEY, JSON.stringify(arr)); }
+
+function loadAllData() {
+  const txs = getTx();
+  const users = getUsers();
+
+  document.getElementById('stat-total').textContent = txs.length;
+  document.getElementById('stat-unpaid').textContent = txs.filter(t => t.status === 'UNPAID').length;
+  const revenue = txs.filter(t => t.status === 'COMPLETED').reduce((s, t) => s + (t.total || 0), 0);
+  document.getElementById('stat-revenue').textContent = 'Rp' + formatNum(revenue);
+  document.getElementById('stat-users').textContent = users.length;
+
+  const unpaidCount = txs.filter(t => t.status === 'UNPAID').length;
+  document.getElementById('badge-orders').textContent = unpaidCount;
+
+  document.getElementById('u-stat-total').textContent = users.length;
+  const session = localStorage.getItem(SESS_KEY);
+  document.getElementById('u-stat-active').textContent = session ? '1' : '0';
+  const usersWithOrder = new Set(txs.map(t => t.contactWa)).size;
+  document.getElementById('u-stat-noorder').textContent = Math.max(0, users.length - usersWithOrder);
+
+  const recent = [...txs].sort((a,b) => b.timestamp - a.timestamp).slice(0, 8);
+  renderTbody('dash-recent-tbody', recent, true);
+
+  document.getElementById('last-refresh').textContent = 'Refresh: ' + new Date().toLocaleTimeString('id-ID');
+}
+
+let currentFilter = 'all';
+
+function setFilter(f) {
+  currentFilter = f;
+  document.querySelectorAll('[id^="f-"]').forEach(b => b.classList.remove('active'));
+  const el = document.getElementById('f-' + f.toLowerCase());
+  if (el) el.classList.add('active');
+  renderOrdersTable();
+}
+
+function filterOrders() { renderOrdersTable(); }
+
+function renderOrdersTable() {
+  const q = (document.getElementById('order-search')?.value || '').toLowerCase();
+  let txs = getTx();
+  if (currentFilter !== 'all') txs = txs.filter(t => t.status === currentFilter);
+  if (q) txs = txs.filter(t =>
+    (t.invoiceId||'').toLowerCase().includes(q) ||
+    (t.game||'').toLowerCase().includes(q) ||
+    (t.item||'').toLowerCase().includes(q) ||
+    (t.paymentMethod||'').toLowerCase().includes(q)
+  );
+  txs.sort((a,b) => b.timestamp - a.timestamp);
+  renderTbody('orders-tbody', txs, false);
+}
+
+function renderTbody(tbodyId, txs, compact) {
+  const tbody = document.getElementById(tbodyId);
+  if (!txs.length) {
+    tbody.innerHTML = `<tr><td colspan="${compact?7:9}">
+      <div class="empty-state">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        <p>Belum ada transaksi</p>
+      </div>
+    </td></tr>`;
+    return;
+  }
+  tbody.innerHTML = txs.map(tx => {
+    const d = new Date(tx.timestamp);
+    const dateStr = d.toLocaleDateString('id-ID',{day:'2-digit',month:'short',year:'2-digit'}) + ' ' + d.toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'});
+    const statusBadge = statusHtml(tx.status);
+    const wa = tx.contactWa || '-';
+    const compact_cols = compact ? '' : `<td class="mono">${wa}</td>`;
+    return `<tr>
+      <td class="mono" style="color:var(--cyan)">${tx.invoiceId}</td>
+      <td>${tx.game || '-'}</td>
+      <td style="max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${tx.item||''}">${tx.item || '-'}</td>
+      ${compact ? '' : `<td>${tx.paymentMethod || '-'}</td>`}
+      <td class="mono">Rp${formatNum(tx.total||0)}</td>
+      ${compact_cols}
+      <td>${statusBadge}</td>
+      <td style="color:var(--muted);font-size:11px;">${dateStr}</td>
+      <td><div class="action-group">
+        <button class="btn-action" onclick="openDetailModal('${tx.invoiceId}')">Detail</button>
+        ${tx.status==='UNPAID' ? `<button class="btn-action paid" onclick="quickStatus('${tx.invoiceId}','PAID')">✓ Paid</button>` : ''}
+        ${tx.status==='PAID' ? `<button class="btn-action processing" onclick="quickStatus('${tx.invoiceId}','PROCESSING')">⟳ Proses</button>` : ''}
+        ${tx.status==='PROCESSING' ? `<button class="btn-action success" onclick="quickStatus('${tx.invoiceId}','COMPLETED')">✓ Selesai</button>` : ''}
+      </div></td>
+    </tr>`;
+  }).join('');
+}
+
+function statusHtml(s) {
+  const map = {
+    UNPAID: ['badge-unpaid','Belum Bayar'],
+    PAID: ['badge-paid','Sudah Bayar'],
+    PROCESSING: ['badge-processing','Diproses'],
+    COMPLETED: ['badge-completed','Selesai'],
+  };
+  const [cls, label] = map[s] || ['badge-unpaid', s];
+  return `<span class="badge ${cls}">${label}</span>`;
+}
+
+function quickStatus(invoiceId, newStatus) {
+  const txs = getTx();
+  const idx = txs.findIndex(t => t.invoiceId === invoiceId);
+  if (idx === -1) return;
+  txs[idx].status = newStatus;
+  saveTx(txs);
+  toast(`Status ${invoiceId} → ${newStatus}`, 'ok');
+  loadAllData();
+  renderOrdersTable();
+}
+
+let currentInvoiceId = null;
+
+function openDetailModal(invoiceId) {
+  const tx = getTx().find(t => t.invoiceId === invoiceId);
+  if (!tx) return;
+  currentInvoiceId = invoiceId;
+
+  document.getElementById('modal-detail-invoice').textContent = invoiceId;
+
+  const acc = tx.accountData || {};
+  const rows = [
+    ['Game', tx.game],
+    ['Layanan / Item', tx.item],
+    ['Jumlah', tx.qty || 1],
+    ['Total', 'Rp' + formatNum(tx.total || 0)],
+    ['Metode Bayar', tx.paymentMethod || '-'],
+    ['Kontak WA', tx.contactWa || '-'],
+    ['Tipe Order', tx.gameType || '-'],
+    ['Player ID', acc.id || '-'],
+    ['Server/Zone', acc.server || '-'],
+    ['📧 Email Akun', acc.extra || '-'],
+    ['🔒 Password', acc.pass ? `<span style="color:#00F3FF;font-family:monospace;font-weight:700;">${acc.pass}</span>` : '-'],
+    ['Login Via', acc.loginVia || '-'],
+    ['🎮 Nickname', acc.nick || '-'],
+    ['Status', tx.status],
+    ['Waktu Order', new Date(tx.timestamp).toLocaleString('id-ID')],
+  ].filter(([,v]) => v && v !== '-');
+
+  document.getElementById('modal-detail-body').innerHTML = rows.map(([k,v]) =>
+    `<div class="detail-row"><span class="detail-key">${k}</span><span class="detail-val">${v}</span></div>`
+  ).join('');
+
+  document.getElementById('modal-status-select').value = tx.status || 'UNPAID';
+  document.getElementById('modal-detail').classList.add('open');
+}
+
+function saveStatusChange() {
+  if (!currentInvoiceId) return;
+  const newStatus = document.getElementById('modal-status-select').value;
+  const txs = getTx();
+  const idx = txs.findIndex(t => t.invoiceId === currentInvoiceId);
+  if (idx === -1) return;
+  txs[idx].status = newStatus;
+  saveTx(txs);
+  toast('Status berhasil diubah ke ' + newStatus, 'ok');
+  closeModal('modal-detail');
+  loadAllData();
+  renderOrdersTable();
+}
+
+function closeModal(id) {
+  document.getElementById(id).classList.remove('open');
+  currentInvoiceId = null;
+}
+
+document.getElementById('modal-detail').addEventListener('click', function(e) {
+  if (e.target === this) closeModal('modal-detail');
+});
+
+function renderUsersTable() {
+  const q = (document.getElementById('user-search')?.value || '').toLowerCase();
+  const users = getUsers();
+  const txs = getTx();
+  const session = localStorage.getItem(SESS_KEY);
+  let activeUser = null;
+  try { activeUser = session ? JSON.parse(session).username : null; } catch{}
+
+  let filtered = users;
+  if (q) filtered = users.filter(u =>
+    (u.fullname||'').toLowerCase().includes(q) ||
+    (u.username||'').toLowerCase().includes(q) ||
+    (u.email||'').toLowerCase().includes(q)
+  );
+
+  document.getElementById('u-stat-total').textContent = users.length;
+  document.getElementById('u-stat-active').textContent = activeUser ? '1' : '0';
+  const usersWithOrder = new Set(txs.map(t => t.contactWa));
+  document.getElementById('u-stat-noorder').textContent = users.filter(u => !txs.some(t => t.contactWa === u.whatsapp)).length;
+
+  const tbody = document.getElementById('users-tbody');
+  if (!filtered.length) {
+    tbody.innerHTML = `<tr><td colspan="7"><div class="empty-state"><p>Belum ada pengguna terdaftar</p></div></td></tr>`;
+    return;
+  }
+  tbody.innerHTML = filtered.map((u, i) => {
+    const orderCount = txs.filter(t => t.contactWa === u.whatsapp).length;
+    const isActive = u.username === activeUser;
+    return `<tr>
+      <td class="mono" style="color:var(--muted)">${i+1}</td>
+      <td>${u.fullname || '-'}</td>
+      <td class="mono" style="color:var(--cyan)">${u.username}</td>
+      <td>${u.email || '-'}</td>
+      <td class="mono">${u.whatsapp || '-'}</td>
+      <td style="text-align:center">${orderCount}</td>
+      <td><span class="user-tag ${isActive ? 'active' : ''}">${isActive ? '● Online' : 'Offline'}</span></td></tr>`;
+  }).join('');
+}
+
+const DEFAULT_PRICES = {
+  'Joki Rank (Per Rank)': [
+    { name: 'Grandmaster', price: 17000 },
+    { name: 'Epic', price: 17000 },
+    { name: 'Legend', price: 17000 },
+    { name: 'Mythic', price: 17000 },
+    { name: 'Honor', price: 20000 },
+    { name: 'Glory', price: 25000 },
+    { name: 'Immortal', price: 30000 },
+  ],
+  'Joki Rank — Paket Grandmaster': [
+    { name: 'Grandmaster V - Epic V', price: 125000 },
+    { name: 'Grandmaster V - Legend V', price: 300000 },
+    { name: 'Grandmaster I - Mythic Grading', price: 400000 },
+    { name: 'Grandmaster II - Mythic Grading', price: 425000 },
+    { name: 'Grandmaster III - Mythic Grading', price: 450000 },
+    { name: 'Grandmaster VI - Mythic Grading', price: 475000 },
+    { name: 'Grandmaster V - Mythic Grading', price: 500000 },
+  ],
+  'Joki Rank — Paket Epic': [
+    { name: 'Epic I - Legend V', price: 35000 },
+    { name: 'Epic II - Legend V', price: 70000 },
+    { name: 'Epic III - Legend V', price: 105000 },
+    { name: 'Epic IV - Legend V', price: 140000 },
+    { name: 'Epic V - Legend V', price: 175000 },
+    { name: 'Epic I - Mythic Grading', price: 235000 },
+    { name: 'Epic II - Mythic Grading', price: 270000 },
+    { name: 'Epic III - Mythic Grading', price: 305000 },
+    { name: 'Epic IV - Mythic Grading', price: 340000 },
+    { name: 'Epic V - Mythic Grading', price: 375000 },
+  ],
+  'Joki Rank — Paket Legend': [
+    { name: 'Legend V - Mythic Grading', price: 200000 },
+    { name: 'Legend V - Honor ⭐️25', price: 540000 },
+    { name: 'Legend V - Glory ⭐️50', price: 1015000 },
+    { name: 'Legend V - Immortal ⭐️100', price: 2265000 },
+  ],
+  'Joki Rank — Paket Mythic Grading': [
+    { name: 'Mythic Full Grading ⭐️15', price: 170000 },
+    { name: 'Grading - Honor ⭐️25', price: 340000 },
+    { name: 'Grading - Glory ⭐️50', price: 815000 },
+    { name: 'Grading - Immortal ⭐️100', price: 2065000 },
+  ],
+  'Joki Rank — Paket Mythic': [
+    { name: 'Mythic ⭐️1 - Honor ⭐️25', price: 425000 },
+    { name: 'Mythic ⭐️1 - Glory ⭐️50', price: 900000 },
+    { name: 'Mythic ⭐️1 - Immortal ⭐️100', price: 2150000 },
+  ],
+  'Joki Rank — Paket Mythic Honor': [
+    { name: 'Honor ⭐️25 - Glory ⭐️50', price: 475000 },
+    { name: 'Honor ⭐️25 - Immortal ⭐️100', price: 1725000 },
+  ],
+  'Joki Rank — Paket Mythic Glory': [
+    { name: 'Glory ⭐️50 - Immortal ⭐️100', price: 1250000 },
+  ],
+  'Joki Gendong (Per Match)': [
+    { name: 'Grandmaster', price: 7000 },
+    { name: 'Epic', price: 8000 },
+    { name: 'Legend', price: 9000 },
+    { name: 'Mythic', price: 20000 },
+    { name: 'Honor', price: 25000 },
+    { name: 'Glory', price: 35000 },
+    { name: 'Immortal', price: 35000 },
+  ],
+  'Joki Gendong Paketan': [
+    { name: 'Epic II to Mythic', price: 295000 },
+    { name: 'Legend V to Mythic', price: 220000 },
+    { name: 'Mythic 1 to Honor', price: 540000 },
+    { name: 'Honor to Glory', price: 820000 },
+    { name: 'Glory to Immortal', price: 35000 },
+    { name: 'Mythic Full Grading', price: 200000 },
+  ],
+  'Top Up — 💎 Diamonds': [
+    { name: '💎 28 Diamonds', price: 8900 },
+    { name: '💎 44 Diamonds', price: 12900 },
+    { name: '💎 56 Diamonds', price: 16800 },
+    { name: '💎 85 Diamonds', price: 28500 },
+    { name: '💎 113 Diamonds', price: 35500 },
+    { name: '💎 172 Diamonds', price: 53800 },
+    { name: '💎 240 Diamonds', price: 67500 },
+    { name: '💎 257 Diamonds', price: 71500 },
+    { name: '💎 278 Diamonds', price: 78500 },
+    { name: '💎 296 Diamonds', price: 82500 },
+    { name: '💎 344 Diamonds', price: 97750 },
+    { name: '💎 408 Diamonds', price: 113000 },
+    { name: '💎 429 Diamonds', price: 120000 },
+    { name: '💎 514 Diamonds', price: 145000 },
+    { name: '💎 568 Diamonds', price: 150000 },
+    { name: '💎 600 Diamonds', price: 167000 },
+    { name: '💎 706 Diamonds', price: 189500 },
+    { name: '💎 878 Diamonds', price: 232000 },
+    { name: '💎 963 Diamonds', price: 257900 },
+    { name: '💎 1050 Diamonds', price: 282000 },
+    { name: '💎 1220 Diamonds', price: 333500 },
+    { name: '💎 1412 Diamonds', price: 380400 },
+    { name: '💎 2195 Diamonds', price: 550400 },
+    { name: '💎 3688 Diamonds', price: 937600 },
+    { name: '💎 5532 Diamonds', price: 1380000 },
+    { name: '💎 9288 Diamonds', price: 2295000 },
+  ],
+  'Top Up — 🔁 Starlight & Passes': [
+    { name: '🔹 Weekly Pass (1x)', price: 31400 },
+    { name: '🔹 Weekly Pass (2x)', price: 57400 },
+    { name: '🔹 Weekly Pass (3x)', price: 82500 },
+    { name: '🔹 Weekly Pass (4x)', price: 110000 },
+    { name: '🔮 Twilight Pass', price: 145000 },
+  ],
+};
+
+function getPrices() {
+  try {
+    const stored = localStorage.getItem(PRICE_KEY);
+    return stored ? JSON.parse(stored) : DEFAULT_PRICES;
+  } catch { return DEFAULT_PRICES; }
+}
+
+function renderPrices() {
+  const prices = getPrices();
+  const container = document.getElementById('price-grid-container');
+  container.innerHTML = Object.entries(prices).map(([cat, items]) => `
+    <div class="price-card">
+      <div class="price-card-head">
+        <div>
+          <div class="price-card-title">${cat}</div>
+          <div class="price-card-type">${items.length} item</div>
+        </div>
+        <button class="btn-save-price" onclick="savePriceCategory('${cat}')">SIMPAN</button>
+      </div>
+      ${items.map((item, idx) => `
+        <div class="price-item-row">
+          <span class="price-item-name">${item.name}</span>
+          <input class="price-input" type="number" value="${item.price}"
+            data-cat="${cat}" data-idx="${idx}" min="0" step="1000">
+        </div>
+      `).join('')}
+    </div>
+  `).join('');
+}
+
+function savePriceCategory(cat) {
+  const prices = getPrices();
+  const inputs = document.querySelectorAll(`[data-cat="${cat}"]`);
+  inputs.forEach(inp => {
+    const idx = parseInt(inp.dataset.idx);
+    prices[cat][idx].price = parseInt(inp.value) || 0;
+  });
+  localStorage.setItem(PRICE_KEY, JSON.stringify(prices));
+  toast(`Harga "${cat}" berhasil disimpan!`, 'ok');
+}
+
+function resetPrices() {
+  if (!confirm('Reset semua harga ke default?')) return;
+  localStorage.setItem(PRICE_KEY, JSON.stringify(DEFAULT_PRICES));
+  renderPrices();
+  toast('Harga direset ke default', 'info');
+}
+
+function loadSettings() {
+  const cfg = JSON.parse(localStorage.getItem(CFG_KEY) || '{}');
+  document.getElementById('admin-wa').value = cfg.adminWa || '';
+  document.getElementById('admin-storename').value = cfg.storeName || 'REYYZ JOKI';
+}
+
+function saveAdminSettings() {
+  const cfg = JSON.parse(localStorage.getItem(CFG_KEY) || '{}');
+  cfg.adminWa = document.getElementById('admin-wa').value.trim();
+  cfg.storeName = document.getElementById('admin-storename').value.trim();
+  localStorage.setItem(CFG_KEY, JSON.stringify(cfg));
+  toast('Pengaturan disimpan!', 'ok');
+}
+
+function changeAdminPass() {
+  const old = document.getElementById('old-pass').value;
+  const nw = document.getElementById('new-pass').value;
+  const cf = document.getElementById('confirm-pass').value;
+  const creds = getAdminCreds();
+  if (old !== creds.password) { toast('Password lama salah!', 'err'); return; }
+  if (nw !== cf) { toast('Konfirmasi password tidak cocok!', 'err'); return; }
+  if (nw.length < 6) { toast('Password minimal 6 karakter!', 'err'); return; }
+  localStorage.setItem(ADM_KEY, JSON.stringify({ username: creds.username, password: nw }));
+  toast('Password berhasil diubah!', 'ok');
+  document.getElementById('old-pass').value = '';
+  document.getElementById('new-pass').value = '';
+  document.getElementById('confirm-pass').value = '';
+}
+
+function clearTransactions() {
+  if (!confirm('Hapus SEMUA transaksi? Tidak bisa dibatalkan!')) return;
+  localStorage.removeItem(TX_KEY);
+  loadAllData();
+  renderOrdersTable();
+  toast('Semua transaksi dihapus', 'info');
+}
+
+function clearUsers() {
+  if (!confirm('Hapus SEMUA pengguna? Tidak bisa dibatalkan!')) return;
+  localStorage.removeItem(USER_KEY);
+  localStorage.removeItem(SESS_KEY);
+  loadAllData();
+  renderUsersTable();
+  toast('Semua pengguna dihapus', 'info');
+}
+
+function startAutoRefresh() {
+  setInterval(() => {
+    loadAllData();
+    const active = document.querySelector('.page.active');
+    if (active?.id === 'page-orders') renderOrdersTable();
+    if (active?.id === 'page-users') renderUsersTable();
+  }, 15000);
+}
+
+function toast(msg, type = 'info') {
+  const c = document.getElementById('admin-toast');
+  const el = document.createElement('div');
+  el.className = `a-toast ${type}`;
+  el.textContent = msg;
+  c.appendChild(el);
+  setTimeout(() => { el.style.opacity='0'; el.style.transform='translateX(20px)'; el.style.transition='0.3s'; setTimeout(()=>el.remove(),300); }, 3000);
+}
+
+function formatNum(n) {
+  return Number(n).toLocaleString('id-ID');
+}
+
+(function buildGrid() {
+  const bg = document.getElementById('grid-bg');
+  for (let i = 0; i < 10; i++) {
+    const h = document.createElement('div');
+    h.className = 'grid-line h';
+    h.style.top = (i * 10) + '%';
+    bg.appendChild(h);
+    const v = document.createElement('div');
+    v.className = 'grid-line v';
+    v.style.left = (i * 10) + '%';
+    bg.appendChild(v);
+  }
+})();
+</script>
+</body>
+</html>
