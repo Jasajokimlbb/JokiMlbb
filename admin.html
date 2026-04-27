@@ -172,9 +172,11 @@ body {
 
 .content { flex: 1; overflow-y: auto; padding: 1.25rem 1.5rem; }
 
+/* ─── PAGES ─── */
 .page { display: none; }
 .page.active { display: block; }
 
+/* ─── STAT CARDS ─── */
 .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.85rem; margin-bottom: 1.25rem; }
 .stat-card {
   background: var(--bg2); border: 1px solid var(--border);
@@ -198,6 +200,7 @@ body {
 .stat-card.green .stat-value { color: var(--green); }
 .stat-sub { font-size: 10px; color: var(--muted); margin-top: 0.35rem; }
 
+/* ─── SECTION HEADER ─── */
 .sec-head {
   display: flex; align-items: center; justify-content: space-between;
   margin-bottom: 0.85rem;
@@ -207,6 +210,7 @@ body {
   letter-spacing: 2px; text-transform: uppercase; color: var(--muted);
 }
 
+/* ─── TABLE ─── */
 .table-wrap { background: var(--bg2); border: 1px solid var(--border); overflow: hidden; }
 .table-search {
   padding: 0.75rem 1rem; border-bottom: 1px solid var(--border);
@@ -239,6 +243,7 @@ tr:last-child td { border-bottom: none; }
 tr:hover td { background: rgba(255,255,255,0.015); }
 .mono { font-family: var(--font-mono); font-size: 11px; }
 
+/* ─── STATUS BADGES ─── */
 .badge {
   display: inline-flex; align-items: center; gap: 4px;
   font-size: 10px; font-weight: 600; padding: 3px 10px;
@@ -249,6 +254,7 @@ tr:hover td { background: rgba(255,255,255,0.015); }
 .badge-processing { background: rgba(0,243,255,0.1); color: var(--cyan); border: 1px solid rgba(0,243,255,0.25); }
 .badge-completed { background: rgba(0,230,118,0.1); color: var(--green); border: 1px solid rgba(0,230,118,0.25); }
 
+/* ─── ACTION BUTTONS ─── */
 .action-group { display: flex; gap: 4px; flex-wrap: wrap; }
 .btn-action {
   font-size: 10px; padding: 3px 10px; cursor: pointer; border: 1px solid var(--border2);
@@ -265,11 +271,13 @@ tr:hover td { background: rgba(255,255,255,0.015); }
 .btn-action.danger { border-color: rgba(255,0,92,0.4); color: var(--pink); }
 .btn-action.danger:hover { background: rgba(255,0,92,0.07); }
 
+/* ─── EMPTY STATE ─── */
 .empty-state {
   text-align: center; padding: 3rem 1rem; color: var(--muted);
 }
 .empty-state svg { opacity: 0.3; margin: 0 auto 0.75rem; }
 
+/* ─── PRICE EDITOR ─── */
 .price-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.85rem; }
 .price-card {
   background: var(--bg2); border: 1px solid var(--border); padding: 1.25rem;
@@ -299,9 +307,11 @@ tr:hover td { background: rgba(255,255,255,0.015); }
 }
 .btn-save-price:hover { opacity: 0.85; }
 
+/* ─── USERS PAGE ─── */
 .user-tag { font-size: 10px; padding: 2px 8px; border: 1px solid var(--border2); color: var(--muted); }
 .user-tag.active { border-color: rgba(0,230,118,0.4); color: var(--green); }
 
+/* ─── TOAST ─── */
 #admin-toast {
   position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 999;
   display: flex; flex-direction: column; gap: 0.5rem;
@@ -359,13 +369,16 @@ tr:hover td { background: rgba(255,255,255,0.015); }
 .detail-key { color: var(--muted); width: 140px; flex-shrink: 0; }
 .detail-val { color: var(--text); word-break: break-all; }
 
+/* ─── SCROLLBAR ─── */
 ::-webkit-scrollbar { width: 4px; height: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 2px; }
 
+/* ─── LAYOUT GRID FOR DASHBOARD ─── */
 .dash-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.85rem; margin-bottom: 0.85rem; }
 .recent-orders-wrap { grid-column: 1 / -1; }
 
+/* ─── RESPONSIVE ─── */
 @media(max-width: 900px) {
   .stats-row { grid-template-columns: repeat(2,1fr); }
   .dash-grid { grid-template-columns: 1fr; }
@@ -375,6 +388,7 @@ tr:hover td { background: rgba(255,255,255,0.015); }
 </head>
 <body>
 
+<!-- ─── LOGIN ─── -->
 <div id="login-screen">
   <div class="login-screen-bg" id="grid-bg"></div>
   <div class="login-box">
@@ -394,8 +408,10 @@ tr:hover td { background: rgba(255,255,255,0.015); }
   </div>
 </div>
 
+<!-- ─── APP ─── -->
 <div id="app">
 
+  <!-- SIDEBAR -->
   <aside class="sidebar">
     <div class="sidebar-logo">
       <div class="brand">REYYZ JOKI</div>
@@ -444,6 +460,7 @@ tr:hover td { background: rgba(255,255,255,0.015); }
     </div>
   </aside>
 
+  <!-- MAIN -->
   <div class="main">
     <div class="topbar">
       <div class="topbar-title" id="page-title">Dashboard</div>
@@ -456,6 +473,7 @@ tr:hover td { background: rgba(255,255,255,0.015); }
 
     <div class="content">
 
+      <!-- ── DASHBOARD PAGE ── -->
       <div class="page active" id="page-dashboard">
         <div class="stats-row">
           <div class="stat-card cyan">
@@ -480,6 +498,7 @@ tr:hover td { background: rgba(255,255,255,0.015); }
           </div>
         </div>
 
+        <!-- Recent Orders -->
         <div class="sec-head">
           <div class="sec-title">Transaksi Terbaru</div>
           <button class="filter-btn" onclick="showPage('orders', document.querySelector('.nav-item:nth-child(2)'))">Lihat Semua →</button>
@@ -499,6 +518,7 @@ tr:hover td { background: rgba(255,255,255,0.015); }
         </div>
       </div>
 
+      <!-- ── ORDERS PAGE ── -->
       <div class="page" id="page-orders">
         <div class="table-wrap">
           <div class="table-search">
@@ -523,6 +543,7 @@ tr:hover td { background: rgba(255,255,255,0.015); }
         </div>
       </div>
 
+      <!-- ── USERS PAGE ── -->
       <div class="page" id="page-users">
         <div class="stats-row" style="grid-template-columns:repeat(3,1fr);">
           <div class="stat-card cyan">
@@ -559,6 +580,7 @@ tr:hover td { background: rgba(255,255,255,0.015); }
         </div>
       </div>
 
+      <!-- ── PRICES PAGE ── -->
       <div class="page" id="page-prices">
         <div class="sec-head" style="margin-bottom:1rem;">
           <div class="sec-title">Kelola Harga Layanan</div>
@@ -569,6 +591,7 @@ tr:hover td { background: rgba(255,255,255,0.015); }
         </div>
       </div>
 
+      <!-- ── SETTINGS PAGE ── -->
       <div class="page" id="page-settings">
         <div class="sec-head"><div class="sec-title">Pengaturan Admin</div></div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.85rem;max-width:700px;">
@@ -602,6 +625,16 @@ tr:hover td { background: rgba(255,255,255,0.015); }
           </div>
 
           <div class="table-wrap" style="padding:1.25rem; grid-column: 1 / -1;">
+            <div style="font-family:var(--font-head);font-size:0.85rem;margin-bottom:0.5rem;color:var(--cyan);">🔄 Sinkronkan ke Semua Device</div>
+            <p style="font-size:11px;color:var(--muted);margin-bottom:1rem;line-height:1.6;">
+              Perubahan harga & rekening yang kamu buat di sini hanya tersimpan di browser ini.<br>
+              Agar sinkron ke semua device (HP customer), klik <strong style="color:var(--cyan);">Export Config</strong> lalu upload file <code>config.json</code> ke GitHub repo kamu.
+            </p>
+            <button class="btn-save-price" onclick="exportConfig()" style="background:var(--cyan);margin-right:0.5rem;">⬇ EXPORT CONFIG.JSON</button>
+            <span style="font-size:11px;color:var(--muted);">Upload ke root folder GitHub repo setelah download</span>
+          </div>
+
+          <div class="table-wrap" style="padding:1.25rem; grid-column: 1 / -1;">
             <div style="font-family:var(--font-head);font-size:0.85rem;margin-bottom:1rem;color:var(--pink);">Zona Berbahaya</div>
             <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
               <button class="btn-action danger" onclick="clearTransactions()">🗑 Hapus Semua Transaksi</button>
@@ -611,10 +644,12 @@ tr:hover td { background: rgba(255,255,255,0.015); }
           </div>
         </div>
       </div>
-    </div>
-  </div>
-</div>
 
+    </div><!-- end .content -->
+  </div><!-- end .main -->
+</div><!-- end #app -->
+
+<!-- MODAL: Detail Transaksi -->
 <div class="modal-overlay" id="modal-detail">
   <div class="modal-box">
     <div class="modal-title">Detail Transaksi</div>
@@ -636,8 +671,13 @@ tr:hover td { background: rgba(255,255,255,0.015); }
   </div>
 </div>
 
+<!-- TOAST -->
 <div id="admin-toast"></div>
+
 <script>
+// ─────────────────────────────────────────────
+//  STORAGE KEYS (same as main site)
+// ─────────────────────────────────────────────
 const TX_KEY   = 'reyyz_transactions';
 const USER_KEY = 'reyyz_users';
 const SESS_KEY = 'reyyz_session';
@@ -645,10 +685,13 @@ const PRICE_KEY= 'reyyz_prices';
 const ADM_KEY  = 'reyyz_admin';
 const CFG_KEY  = 'reyyz_config';
 
+// ─────────────────────────────────────────────
+//  ADMIN CREDENTIALS
+// ─────────────────────────────────────────────
 function getAdminCreds() {
   const stored = localStorage.getItem(ADM_KEY);
   if (stored) return JSON.parse(stored);
-  return { username: 'admin', password: 'Jonasan05' };
+  return { username: 'admin', password: 'reyyzjoki2026' };
 }
 
 function doAdminLogin() {
@@ -683,6 +726,9 @@ if (sessionStorage.getItem('adm_auth') === '1') {
   startAutoRefresh();
 }
 
+// ─────────────────────────────────────────────
+//  NAVIGATION
+// ─────────────────────────────────────────────
 const pageTitles = {
   dashboard: 'Dashboard',
   orders: 'Manajemen Transaksi',
@@ -704,35 +750,48 @@ function showPage(name, navEl) {
   if (name === 'settings') loadSettings();
 }
 
+// ─────────────────────────────────────────────
+//  DATA HELPERS
+// ─────────────────────────────────────────────
 function getTx()    { try { return JSON.parse(localStorage.getItem(TX_KEY) || '[]'); } catch{return[];} }
 function getUsers() { try { return JSON.parse(localStorage.getItem(USER_KEY) || '[]'); } catch{return[];} }
 function saveTx(arr){ localStorage.setItem(TX_KEY, JSON.stringify(arr)); }
 
+// ─────────────────────────────────────────────
+//  LOAD ALL DATA (Dashboard)
+// ─────────────────────────────────────────────
 function loadAllData() {
   const txs = getTx();
   const users = getUsers();
 
+  // Stats
   document.getElementById('stat-total').textContent = txs.length;
   document.getElementById('stat-unpaid').textContent = txs.filter(t => t.status === 'UNPAID').length;
   const revenue = txs.filter(t => t.status === 'COMPLETED').reduce((s, t) => s + (t.total || 0), 0);
   document.getElementById('stat-revenue').textContent = 'Rp' + formatNum(revenue);
   document.getElementById('stat-users').textContent = users.length;
 
+  // Badge
   const unpaidCount = txs.filter(t => t.status === 'UNPAID').length;
   document.getElementById('badge-orders').textContent = unpaidCount;
 
+  // Users stat
   document.getElementById('u-stat-total').textContent = users.length;
   const session = localStorage.getItem(SESS_KEY);
   document.getElementById('u-stat-active').textContent = session ? '1' : '0';
   const usersWithOrder = new Set(txs.map(t => t.contactWa)).size;
   document.getElementById('u-stat-noorder').textContent = Math.max(0, users.length - usersWithOrder);
 
+  // Recent orders (last 8)
   const recent = [...txs].sort((a,b) => b.timestamp - a.timestamp).slice(0, 8);
   renderTbody('dash-recent-tbody', recent, true);
 
   document.getElementById('last-refresh').textContent = 'Refresh: ' + new Date().toLocaleTimeString('id-ID');
 }
 
+// ─────────────────────────────────────────────
+//  ORDERS TABLE
+// ─────────────────────────────────────────────
 let currentFilter = 'all';
 
 function setFilter(f) {
@@ -817,6 +876,9 @@ function quickStatus(invoiceId, newStatus) {
   renderOrdersTable();
 }
 
+// ─────────────────────────────────────────────
+//  DETAIL MODAL
+// ─────────────────────────────────────────────
 let currentInvoiceId = null;
 
 function openDetailModal(invoiceId) {
@@ -872,10 +934,14 @@ function closeModal(id) {
   currentInvoiceId = null;
 }
 
+// Close modal on overlay click
 document.getElementById('modal-detail').addEventListener('click', function(e) {
   if (e.target === this) closeModal('modal-detail');
 });
 
+// ─────────────────────────────────────────────
+//  USERS TABLE
+// ─────────────────────────────────────────────
 function renderUsersTable() {
   const q = (document.getElementById('user-search')?.value || '').toLowerCase();
   const users = getUsers();
@@ -915,6 +981,9 @@ function renderUsersTable() {
   }).join('');
 }
 
+// ─────────────────────────────────────────────
+//  PRICES
+// ─────────────────────────────────────────────
 const DEFAULT_PRICES = {
   'Joki Rank (Per Rank)': [
     { name: 'Grandmaster', price: 17000 },
@@ -1072,6 +1141,9 @@ function resetPrices() {
   toast('Harga direset ke default', 'info');
 }
 
+// ─────────────────────────────────────────────
+//  SETTINGS
+// ─────────────────────────────────────────────
 function loadSettings() {
   const cfg = JSON.parse(localStorage.getItem(CFG_KEY) || '{}');
   document.getElementById('admin-wa').value = cfg.adminWa || '';
@@ -1118,6 +1190,9 @@ function clearUsers() {
   toast('Semua pengguna dihapus', 'info');
 }
 
+// ─────────────────────────────────────────────
+//  AUTO REFRESH every 15 sec
+// ─────────────────────────────────────────────
 function startAutoRefresh() {
   setInterval(() => {
     loadAllData();
@@ -1127,6 +1202,9 @@ function startAutoRefresh() {
   }, 15000);
 }
 
+// ─────────────────────────────────────────────
+//  TOAST
+// ─────────────────────────────────────────────
 function toast(msg, type = 'info') {
   const c = document.getElementById('admin-toast');
   const el = document.createElement('div');
@@ -1136,10 +1214,41 @@ function toast(msg, type = 'info') {
   setTimeout(() => { el.style.opacity='0'; el.style.transform='translateX(20px)'; el.style.transition='0.3s'; setTimeout(()=>el.remove(),300); }, 3000);
 }
 
+// ─────────────────────────────────────────────
+//  HELPERS
+// ─────────────────────────────────────────────
 function formatNum(n) {
   return Number(n).toLocaleString('id-ID');
 }
 
+// ─────────────────────────────────────────────
+// ── EXPORT CONFIG.JSON ──
+function exportConfig() {
+  const prices = getPrices();
+  const cfg = JSON.parse(localStorage.getItem(CFG_KEY) || '{}');
+  const config = {
+    prices,
+    paymentAccounts: {
+      "QRIS":      "qris.png",
+      "DANA":      "088224946386 A/n (Reynaldi Darmawan)",
+      "SHOPEEPAY": "085749672904 A/n (Reynaldi Darmawan)",
+      "BCA":       "0830230211 A/n (Reynaldi Darmawan)",
+      "SEABANK":   "901550934087 A/n (Reynaldi Darmawan)"
+    },
+    adminWa:   cfg.adminWa   || '6285749672904',
+    storeName: cfg.storeName || 'REYYZ JOKI',
+    exportedAt: new Date().toISOString()
+  };
+  const blob = new Blob([JSON.stringify(config, null, 2)], { type: 'application/json' });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href = url; a.download = 'config.json'; a.click();
+  URL.revokeObjectURL(url);
+  toast('config.json didownload! Upload ke GitHub repo.', 'ok');
+}
+
+//  GRID BG
+// ─────────────────────────────────────────────
 (function buildGrid() {
   const bg = document.getElementById('grid-bg');
   for (let i = 0; i < 10; i++) {
